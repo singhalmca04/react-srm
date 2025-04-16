@@ -6,7 +6,7 @@ const UserTable = () => {
 
   // Fetch data from API
   useEffect(() => {
-    fetch("https://seca.vercel.app/find/student")
+    fetch("https://seca.vercel.app/findstudent")
       .then((res) => res.json())
       .then((data) => {
         setUsers(data.data);
