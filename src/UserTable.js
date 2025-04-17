@@ -11,7 +11,7 @@ const UserTable = () => {
       .then((data) => {
         setUsers(data.data);
         setLoading(false);
-        console.log(data.data);
+        console.log("users", data.data);
       })
       .catch((err) => {
         console.error("Error fetching users:", err);
@@ -27,18 +27,20 @@ const UserTable = () => {
       <table border="1" cellPadding="10" cellSpacing="0">
         <thead>
           <tr>
-            <th>ID</th>
+            <th>Reg  No </th>
             <th>Name</th>
-            <th>Email</th>
-            <th>City</th>
+            <th>Aadhar</th>
+            <th>Address</th>
+            <th>Marks</th>
           </tr>
         </thead>
         <tbody>
           {users.map((user, index) => (
             <tr key={index}>
-              <td>{user.subject}</td>
+              <td>{user.regno}</td>
               <td>{user.name}</td>
-              <td>{user.age}</td>
+              <td>{user.aadhar}</td>
+              <td>{user.address}</td>
               <td>{user.marks}</td>
             </tr>
           ))}
