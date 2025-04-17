@@ -37,7 +37,7 @@ const Apicall = () => {
 
     return (
         <div>
-            <hr style={{marginTop: "40px"}}/>
+            
             <h1>POST API Call in React</h1>
             Name: <input type="text" name="name" value={formData.name}
                 onChange={handleChange}></input><br />
@@ -69,6 +69,7 @@ const Apicall = () => {
                     )) : <h1>No data found</h1>}
                 </tbody>
             </table>
+            <hr style={{marginTop: "40px"}}/>
         </div>
     );
 };
