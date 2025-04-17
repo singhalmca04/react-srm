@@ -2,14 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import Life from './Life';
+import Apicall from './Apicall';
 import UserTable from './UserTable';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    <Apicall />
     <UserTable />
     {/* <Life /> */}
   </React.StrictMode>
