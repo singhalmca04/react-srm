@@ -4,7 +4,7 @@ const Secdapi = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading]= useState(true);
     useEffect(()=>{
-        fetch("http://localhost:4000/find/student")
+        fetch("https://seca.vercel.app/find/student")
         .then(res => res.json())
         .then(data => {
             setUsers(data.data)
