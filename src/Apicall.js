@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
+import Table from 'react-bootstrap/Table';
 
 const Apicall = () => {
     const navigate = useNavigate();
@@ -28,7 +29,7 @@ const Apicall = () => {
     return (
         <div>
             <h2>User Table List</h2>
-            <table border="1" cellPadding="10" cellSpacing="0">
+            <Table striped bordered hover>
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -50,8 +51,7 @@ const Apicall = () => {
                         </tr>
                     )) : <tr><td>No data found</td></tr>}
                 </tbody>
-            </table>
-            <hr style={{ marginTop: "40px" }} />
+            </Table>
         </div>
     );
 };
