@@ -28,6 +28,7 @@ class Life extends React.Component {
                 <h1>Hello</h1>
                 <h6> Name is {this.state.name}</h6>
                 <h6> Age is {this.state.age}</h6>
+                <a href="/create">Create Data</a>
                 <button onClick={this.changeAge}>Change Age</button>
             </div>
         )

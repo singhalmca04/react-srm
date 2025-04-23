@@ -1,13 +1,14 @@
 import React, {useState} from 'react'
+import { useNavigate } from 'react-router-dom';
 
 const Secdapipost = () => {
+    const navigate = useNavigate();
     const [users, setUsers] = useState([]);
     const [loading, setLoading]= useState(true);
     const [formData, setFormData] = useState({
                                         name: "",
-                                        age: "",
-                                        marks: "",
-                                        subject: ""
+                                        regno: "",
+                                        marks: ""
                                     });
     function handleChange(e) {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -15,7 +16,7 @@ const Secdapipost = () => {
     const saveData = () => {
         setLoading(true);
         console.log(JSON.stringify(formData), formData);
-        fetch("https://seca.vercel.app/save/data", {
+        fetch("https://seca.vercel.app/save", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -27,6 +28,7 @@ const Secdapipost = () => {
             setUsers(data.data)
             setLoading(false)
             console.log(data.msg)
+            navigate('/')
         })
         .catch(err => {
             console.log("Error " + err);
@@ -37,17 +39,13 @@ const Secdapipost = () => {
     <div>
       <table>
         <tbody>
-            <tr>
+        <tr>
                 <th>Name</th>
                 <th><input type="text" name="name" value={formData.name} onChange={handleChange}/></th>
             </tr>
             <tr>
-                <th>Age</th>
-                <th><input type="text" name="age" value={formData.age} onChange={handleChange}/></th>
-            </tr>
-            <tr>
-                <th>Subject</th>
-                <th><input type="text" name="subject" value={formData.subject} onChange={handleChange}/></th>
+                <th>Reg NO</th>
+                <th><input type="text" name="regno" value={formData.regno} onChange={handleChange}/></th>
             </tr>
             <tr>
                 <th>Marks</th>

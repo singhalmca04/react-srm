@@ -1,18 +1,25 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom';
+
 
 const Hook = () => {
-    const [name, setName] = useState("Ajay");
-    const [age, setAge] = useState(22);
-    useEffect(()=>{
-        console.log("Use Effect called");
-    }, [name, age])
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { id } = location.state || {};
 
+  useEffect(() => {
+    fetch("https://seca.vercel.app/delete/"+id, {
+      method: "DELETE"
+    })
+    .then((res)=> res.json())
+    .then((data)=>{
+      console.log(data);
+      setTimeout(navigate('/'), 1000);
+    })
+  }, [])
   return (
     <div>
-        <h3>{name}</h3>
-        <h3>{age}</h3>
-        <button onClick={()=>{setName("Vijay")}}>Change Name</button>
-        <button onClick={()=>{setAge(age+1)}}>Change Age</button>
+      <h1>Deleted.... </h1>
     </div>
   )
 }

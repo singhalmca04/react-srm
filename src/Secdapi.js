@@ -1,49 +1,60 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Secdapi = () => {
-    const [users, setUsers] = useState([]);
-    const [loading, setLoading]= useState(true);
-    useEffect(()=>{
-        fetch("https://seca.vercel.app/find/student")
-        .then(res => res.json())
+    const location = useLocation();
+    const navigate = useNavigate();
+    const { id, name, marks, regno } = location.state || {};
+    const [users, setUsers] = useState({ name, marks, regno });
+    const [loading, setLoading] = useState(false);
+    function handleChange(e) {
+        setUsers({ ...users, [e.target.name]: e.target.value });
+    }
+    const saveData = () => {
+        setLoading(true);
+        fetch("https://seca.vercel.app/update/"+id, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(users),
+        })
+        .then((res)=> res.json())
         .then(data => {
-            setUsers(data.data)
             setLoading(false)
-            console.log(data.data)
+            console.log(data);
+            navigate('/');
         })
         .catch(err => {
             console.log("Error " + err);
             setLoading(false);
         })
-    },[])
+    }
     if (loading) return <p>Loading...</p>;
 
-  return (
-    <div>
+    return (
+        <div>
       <table>
-        <thead>
+        <tbody>
             <tr>
                 <th>Name</th>
-                <th>Marks</th>
-                <th>Age</th>
-                <th>Subject</th>
+                <th><input type="text" name="name" value={users.name} onChange={handleChange}/></th>
             </tr>
-        </thead>
-        <tbody>
-            {
-                users.map((user)=>
-                    <tr key={user._id}>
-                        <td>{user.name}</td>
-                        <td>{user.marks}</td>
-                        <td>{user.age}</td>
-                        <td>{user.subject}</td>
-                    </tr>
-                )
-            }
+            <tr>
+                <th>Reg NO</th>
+                <th><input type="text" name="regno" value={users.regno} onChange={handleChange}/></th>
+            </tr>
+            <tr>
+                <th>Marks</th>
+                <th><input type="text" name="marks" value={users.marks} onChange={handleChange}/></th>
+            </tr>
+            <tr>
+                <td><button onClick={saveData}>Save Data</button></td>
+            </tr>
         </tbody>
       </table>
     </div>
-  )
+    )
 }
 
 export default Secdapi

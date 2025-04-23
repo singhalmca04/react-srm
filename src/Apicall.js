@@ -1,53 +1,32 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
+import Button from 'react-bootstrap/Button';
 
 const Apicall = () => {
+    const navigate = useNavigate();
     const [response, setResponse] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [formData, setFormData] = useState({
-        name: "",
-        regno: "",
-        marks: 0,
-    });
+    useEffect(() => {
+        async function getData() {
+            setLoading(true);
+            try {
+                const res = await fetch("https://seca.vercel.app/finduser");
+                const data = await res.json();
+                setResponse(data.data);
 
-    const handleSubmit = async () => {
-        setLoading(true);
-        const postData = {
-            regno: formData.regno,
-            name: formData.name,
-            marks: formData.marks,
-        };
-        try {
-            const res = await fetch("https://seca.vercel.app/save", {
-                method: "POST",
-                body: JSON.stringify(postData),
-            });
-            const data = await res.json();
-            setResponse(data.data);
-        } catch (error) {
-            console.error("Error:", error);
-        } finally {
-            setLoading(false);
+            } catch (error) {
+                console.error("Error:", error);
+            } finally {
+                setLoading(false);
+            }
         }
-    };
-    const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+        getData();
+    }, []);
 
     if (loading) return <p>Loading...</p>;
 
     return (
         <div>
-            
-            <h1>POST API Call in React</h1>
-            Name: <input type="text" name="name" value={formData.name}
-                onChange={handleChange}></input><br />
-            Reg No.: <input type="text" name="regno" value={formData.regno}
-                onChange={handleChange}></input><br />
-            Marks: <input type="text" name="marks" value={formData.marks}
-                onChange={handleChange}></input><br />
-            <button onClick={handleSubmit} disabled={loading}>
-                {loading ? "Submitting..." : "Submit Data"}
-            </button>
             <h2>User Table List</h2>
             <table border="1" cellPadding="10" cellSpacing="0">
                 <thead>
@@ -56,20 +35,23 @@ const Apicall = () => {
                         <th>Name</th>
                         <th>Marks</th>
                         <th>Reg No</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     {response ? response.map((user, index) => (
-                        <tr>
+                        <tr key={index}>
                             <td>{index + 1}</td>
                             <td>{user.name}</td>
                             <td>{user.marks}</td>
                             <td>{user.regno}</td>
+                            <td> <Button variant="danger" onClick={()=> navigate('/update', { state: {id: user._id, name: user.name, marks: user.marks, regno: user.regno} })}>Edit</Button>   
+                            &nbsp;&nbsp;&nbsp;<Button onClick={()=> navigate('/delete', { state: {id: user._id} })} variant="outline-success">Delete</Button> </td>
                         </tr>
-                    )) : <h1>No data found</h1>}
+                    )) : <tr><td>No data found</td></tr>}
                 </tbody>
             </table>
-            <hr style={{marginTop: "40px"}}/>
+            <hr style={{ marginTop: "40px" }} />
         </div>
     );
 };
