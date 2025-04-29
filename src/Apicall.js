@@ -26,7 +26,7 @@ const Apicall = () => {
     async function downloadData() {
         setLoading(true);
         try {
-            const res = await fetch("http://localhost:4000/downloaduser");
+            const res = await fetch("https://seca.vercel.app/downloaduser");
             const blob = await res.blob();
 
             // Create a link and simulate click to download
@@ -47,7 +47,7 @@ const Apicall = () => {
     async function downloadDatax() {
         setLoading(true);
         try {
-            const res = await fetch("http://localhost:4000/downloaduserx");
+            const res = await fetch("https://seca.vercel.app/downloaduserx");
             const blob = await res.blob();
 
             // Create a link and simulate click to download
@@ -76,7 +76,7 @@ const Apicall = () => {
         const formData = new FormData();
         formData.append('image', file);
 
-        const res = await fetch('http://localhost:4000/uploadpics/'+id, {
+        const res = await fetch('https://seca.vercel.app/uploadpics/'+id, {
             method: 'POST',
             body: formData,
         });
@@ -104,15 +104,6 @@ const Apicall = () => {
                     </div>
                 </div>
             </div>
-            {/* <h2>Upload Image</h2>
-           
-
-            {uploadedPath && (
-                <div>
-                    <h4>Uploaded Image:</h4>
-                    <img src={`http://localhost:4000${uploadedPath}`} alt="Uploaded" width="300" />
-                </div>
-            )} */}
             <Table striped bordered hover>
                 <thead>
                     <tr>
