@@ -15,13 +15,12 @@ const Secdapipost = () => {
     }
     const saveData = () => {
         setLoading(true);
-        console.log(JSON.stringify(formData), formData);
         fetch("https://seca.vercel.app/save", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(formData),
+            body: JSON.stringify(formData)
         })
         .then((res)=> res.json())
         .then(data => {
