@@ -76,7 +76,7 @@ const Apicall = () => {
         const formData = new FormData();
         formData.append('image', file);
 
-        const res = await fetch('https://seca.vercel.app/uploadpics/'+id, {
+        const res = await fetch('http://65.0.131.90:4000/uploadpics/'+id, {
             method: 'POST',
             body: formData,
         });
