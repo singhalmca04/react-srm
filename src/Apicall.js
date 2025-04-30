@@ -121,7 +121,7 @@ const Apicall = () => {
                             <td>{user.name}</td>
                             <td>{user.marks}</td>
                             <td>{user.regno}</td>
-                            <td><img src={user?.image ? `http://localhost:4000${user.image}` : '/logo192.png'} width="50px" alt="No Image"/></td>
+                            <td><img src={user?.image ? `http://65.0.131.90:4000${user.image}` : '/logo192.png'} width="50px" alt="No Image"/></td>
                             <td> <Button variant="danger" onClick={() => navigate('/update', { state: { id: user._id, name: user.name, marks: user.marks, regno: user.regno } })}>Edit</Button>
                                 &nbsp;&nbsp;&nbsp; <Button onClick={() => navigate('/delete', { state: { id: user._id } })} variant="outline-success">Delete</Button>
                                 &nbsp;&nbsp;&nbsp; <input type="file" onChange={handleFileChange} />
