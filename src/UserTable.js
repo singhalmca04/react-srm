@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-
+const apiUrl = process.env.REACT_APP_API_URL;
 const UserTable = () => {
   const [users, setUsers] = useState("");
   const [loading, setLoading] = useState(true);
 
   // Fetch data from API
   useEffect(() => {
-    fetch("https://seca.vercel.app/findstudent")
+    fetch(apiUrl + "/findstudent")
       .then((res) => res.json())
       .then((data) => {
         setUsers(data.data);

@@ -2,16 +2,21 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
+import axios from 'axios';
+
+const apiUrl = process.env.REACT_APP_API_URL;
 
 const Apicall = () => {
     const navigate = useNavigate();
     const [response, setResponse] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [excelData, setExcelData] = useState([]);
+
     useEffect(() => {
         async function getData() {
             setLoading(true);
             try {
-                const res = await fetch("https://seca.vercel.app/finduser");
+                const res = await fetch(apiUrl + "/finduser");
                 const data = await res.json();
                 setResponse(data.data);
 
@@ -26,7 +31,7 @@ const Apicall = () => {
     async function downloadData() {
         setLoading(true);
         try {
-            const res = await fetch("https://seca.vercel.app/downloaduser");
+            const res = await fetch(apiUrl + "/downloaduser");
             const blob = await res.blob();
 
             // Create a link and simulate click to download
@@ -47,7 +52,7 @@ const Apicall = () => {
     async function downloadDatax() {
         setLoading(true);
         try {
-            const res = await fetch("https://seca.vercel.app/downloaduserx");
+            const res = await fetch(apiUrl + "/downloaduserx");
             const blob = await res.blob();
 
             // Create a link and simulate click to download
@@ -76,7 +81,7 @@ const Apicall = () => {
         const formData = new FormData();
         formData.append('image', file);
 
-        const res = await fetch('http://65.0.131.90:4000/uploadpics/'+id, {
+        const res = await fetch(apiUrl + '/uploadpics/' + id, {
             method: 'POST',
             body: formData,
         });
@@ -86,11 +91,29 @@ const Apicall = () => {
     }
     if (loading) return <p>Loading...</p>;
 
+    const uploadExcel = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const res = await axios.post('http://localhost:4000/uploadexcel', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+
+            setExcelData(res.data.data);
+        } catch (err) {
+            console.error('Upload error:', err);
+        }
+    };
+
     return (
         <div>
             <div className="container mt-4">
                 <div className="row">
-                    <div className="col-md-6">
+                    <div className="col-md-4">
                         <h2>User Table List</h2>
                     </div>
                     <div className="col-md-2">
@@ -100,7 +123,15 @@ const Apicall = () => {
                         <button onClick={downloadDatax}>Download in Excel</button>
                     </div>
                     <div className="col-md-2">
-                        <button onClick={uploadPics}>Upload Pics</button>
+                        <button onClick={() => navigate('/mail')}>Send Mail</button>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-md-12">
+                        <h2>Upload Excel File</h2>
+                        <input type="file" accept=".xlsx, .xls" onChange={uploadExcel} />
+                        {/* <h3>Parsed Data</h3> */}
+                        {/* <pre>{JSON.stringify(excelData, null, 2)}</pre> */}
                     </div>
                 </div>
             </div>
@@ -121,11 +152,11 @@ const Apicall = () => {
                             <td>{user.name}</td>
                             <td>{user.marks}</td>
                             <td>{user.regno}</td>
-                            <td><img src={user?.image ? `http://65.0.131.90:4000${user.image}` : '/logo192.png'} width="50px" alt="No Image"/></td>
+                            <td><img src={user?.image ? `${apiUrl}${user.image}` : '/logo192.png'} width="50px" alt="No Image" /></td>
                             <td> <Button variant="danger" onClick={() => navigate('/update', { state: { id: user._id, name: user.name, marks: user.marks, regno: user.regno } })}>Edit</Button>
                                 &nbsp;&nbsp;&nbsp; <Button onClick={() => navigate('/delete', { state: { id: user._id } })} variant="outline-success">Delete</Button>
                                 &nbsp;&nbsp;&nbsp; <input type="file" accept="image/*" onChange={handleFileChange} />
-                                <button onClick={()=>uploadPics(user._id)}>Upload</button> </td>
+                                <button onClick={() => uploadPics(user._id)}>Upload</button> </td>
                         </tr>
                     )) : <tr><td>No data found</td></tr>}
                 </tbody>

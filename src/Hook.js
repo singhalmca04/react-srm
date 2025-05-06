@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom';
-
+const apiUrl = process.env.REACT_APP_API_URL;
 
 const Hook = () => {
   const navigate = useNavigate();
@@ -8,7 +8,7 @@ const Hook = () => {
   const { id } = location.state || {};
 
   useEffect(() => {
-    fetch("https://seca.vercel.app/delete/"+id, {
+    fetch(apiUrl + "/delete/"+id, {
       method: "DELETE"
     })
     .then((res)=> res.json())

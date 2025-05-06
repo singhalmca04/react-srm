@@ -5,6 +5,7 @@ import Secdapipost from './Secdapipost';
 import Apicall from './Apicall';
 import Secdapi from './Secdapi';
 import Life from './Hook';
+import Mail from './Mail';
 import { Routes, Route, BrowserRouter as Router } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -40,6 +41,7 @@ root.render(
         <Route path="/create" element={<Secdapipost />} />
         <Route path="/update" element={<Secdapi />} />
         <Route path="/delete" element={<Life />} />
+        <Route path="/mail" element={<Mail />} />
       </Routes>
     </Router>
   </>

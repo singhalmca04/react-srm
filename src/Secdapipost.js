@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import { useNavigate } from 'react-router-dom';
+const apiUrl = process.env.REACT_APP_API_URL;
 
 const Secdapipost = () => {
     const navigate = useNavigate();
@@ -15,7 +16,7 @@ const Secdapipost = () => {
     }
     const saveData = () => {
         setLoading(true);
-        fetch("https://seca.vercel.app/save", {
+        fetch(apiUrl + "/save", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -26,7 +27,6 @@ const Secdapipost = () => {
         .then(data => {
             setUsers(data.data)
             setLoading(false)
-            console.log(data.msg)
             navigate('/')
         })
         .catch(err => {

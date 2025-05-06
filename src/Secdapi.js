@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
-
+const apiUrl = process.env.REACT_APP_API_URL;
 const Secdapi = () => {
     const location = useLocation();
     const navigate = useNavigate();
@@ -12,7 +12,7 @@ const Secdapi = () => {
     }
     const saveData = () => {
         setLoading(true);
-        fetch("https://seca.vercel.app/update/"+id, {
+        fetch(apiUrl + "/update/"+id, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json"
