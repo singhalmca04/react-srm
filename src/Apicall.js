@@ -11,6 +11,7 @@ const Apicall = () => {
     const [response, setResponse] = useState(null);
     const [loading, setLoading] = useState(false);
     const [excelData, setExcelData] = useState([]);
+    const [files, setFiles] = useState([]);
 
     useEffect(() => {
         async function getData() {
@@ -99,7 +100,36 @@ const Apicall = () => {
         formData.append('file', file);
 
         try {
-            const res = await axios.post('http://localhost:4000/uploadexcel', formData, {
+            const res = await axios.post(apiUrl + '/uploadexcel', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+
+            setExcelData(res.data.data);
+        } catch (err) {
+            console.error('Upload error:', err);
+        }
+    };
+
+    const handleChange = (e) => {
+        setFiles([...e.target.files]);
+    };
+
+    const handleBulkUpload = async () => {
+        const formData = new FormData();
+        files.forEach(file => formData.append('images', file));
+        const res = await axios.post(apiUrl + `/upload/bulk/images`, formData);
+        console.log('Uploaded:', res.data);
+    };
+
+    const uploadExcelIe = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const res = await axios.post(apiUrl + '/uploadexcelie', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
 
@@ -128,20 +158,37 @@ const Apicall = () => {
                 </div>
                 <div className="row">
                     <div className="col-md-12">
-                        <h2>Upload Excel File</h2>
+                        <b>Upload Student Data</b>
                         <input type="file" accept=".xlsx, .xls" onChange={uploadExcel} />
                         {/* <h3>Parsed Data</h3> */}
                         {/* <pre>{JSON.stringify(excelData, null, 2)}</pre> */}
                     </div>
                 </div>
+                <div className="row">
+                    <div className="col-md-12">
+                        <b>Upload IE Data</b>
+                        <input type="file" accept=".xlsx, .xls" onChange={uploadExcelIe} />
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-md-12">
+                        <b>Upload Bulk Images</b>
+                        <input type="file" multiple accept="image/*" onChange={handleChange} />
+                        <button onClick={handleBulkUpload}>Upload</button>
+                    </div>
+                </div>
             </div>
+
             <Table striped bordered hover>
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Name</th>
-                        <th>Marks</th>
                         <th>Reg No</th>
+                        <th>Name</th>
+                        <th>Semester</th>
+                        <th>Section</th>
+                        <th>Batch</th>
+                        <th>Image</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -149,14 +196,16 @@ const Apicall = () => {
                     {response ? response.map((user, index) => (
                         <tr key={index}>
                             <td>{index + 1}</td>
-                            <td>{user.name}</td>
-                            <td>{user.marks}</td>
                             <td>{user.regno}</td>
+                            <td>{user.name}</td>
+                            <td>{user.semester}</td>
+                            <td>{user.section}</td>
+                            <td>{user.batch}</td>
                             <td><img src={user?.image ? `${apiUrl}${user.image}` : '/logo192.png'} width="50px" alt="No Image" /></td>
                             <td> <Button variant="danger" onClick={() => navigate('/update', { state: { id: user._id, name: user.name, marks: user.marks, regno: user.regno } })}>Edit</Button>
                                 &nbsp;&nbsp;&nbsp; <Button onClick={() => navigate('/delete', { state: { id: user._id } })} variant="outline-success">Delete</Button>
                                 &nbsp;&nbsp;&nbsp; <input type="file" accept="image/*" onChange={handleFileChange} />
-                                <button onClick={() => uploadPics(user._id)}>Upload</button> </td>
+                                <button disabled={!file} onClick={() => uploadPics(user._id)}>Upload</button> </td>
                         </tr>
                     )) : <tr><td>No data found</td></tr>}
                 </tbody>
