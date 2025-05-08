@@ -105,6 +105,7 @@ const Apicall = () => {
             });
 
             setExcelData(res.data.data);
+            navigate(0);
         } catch (err) {
             console.error('Upload error:', err);
         }
@@ -117,8 +118,8 @@ const Apicall = () => {
     const handleBulkUpload = async () => {
         const formData = new FormData();
         files.forEach(file => formData.append('images', file));
-        const res = await axios.post(apiUrl + `/upload/bulk/images`, formData);
-        console.log('Uploaded:', res.data);
+        await axios.post(apiUrl + `/upload/bulk/images`, formData);
+        navigate(0);
     };
 
     const uploadExcelIe = async (e) => {
@@ -134,6 +135,7 @@ const Apicall = () => {
             });
 
             setExcelData(res.data.data);
+            navigate(0);
         } catch (err) {
             console.error('Upload error:', err);
         }
@@ -143,15 +145,15 @@ const Apicall = () => {
         <div>
             <div className="container mt-4">
                 <div className="row">
-                    <div className="col-md-4">
+                    <div className="col-md-8">
                         <h2>User Table List</h2>
                     </div>
-                    <div className="col-md-2">
+                    {/* <div className="col-md-2">
                         <button onClick={downloadData}>Download in PDF</button>
                     </div>
                     <div className="col-md-2">
                         <button onClick={downloadDatax}>Download in Excel</button>
-                    </div>
+                    </div> */}
                     <div className="col-md-2">
                         <button onClick={() => navigate('/mail')}>Send Mail</button>
                     </div>
@@ -164,13 +166,13 @@ const Apicall = () => {
                         {/* <pre>{JSON.stringify(excelData, null, 2)}</pre> */}
                     </div>
                 </div>
-                <div className="row">
+                {/* <div className="row">
                     <div className="col-md-12">
                         <b>Upload IE Data</b>
                         <input type="file" accept=".xlsx, .xls" onChange={uploadExcelIe} />
                     </div>
-                </div>
-                <div className="row">
+                </div> */}
+                <div className="row" style={{marginTop: '50px'}}>
                     <div className="col-md-12">
                         <b>Upload Bulk Images</b>
                         <input type="file" multiple accept="image/*" onChange={handleChange} />
