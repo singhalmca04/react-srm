@@ -4,8 +4,8 @@ const apiUrl = process.env.REACT_APP_API_URL;
 const Secdapi = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const { id, name, marks, regno } = location.state || {};
-    const [users, setUsers] = useState({ name, marks, regno });
+    const { id, name, semester, section, batch, subcode, regno } = location.state || {};
+    const [users, setUsers] = useState({ name, semester, section, batch, subcode, regno });
     const [loading, setLoading] = useState(false);
     function handleChange(e) {
         setUsers({ ...users, [e.target.name]: e.target.value });
@@ -45,8 +45,20 @@ const Secdapi = () => {
                 <th><input type="text" name="regno" value={users.regno} onChange={handleChange}/></th>
             </tr>
             <tr>
-                <th>Marks</th>
-                <th><input type="text" name="marks" value={users.marks} onChange={handleChange}/></th>
+                <th>Semester</th>
+                <th><input type="text" name="semester" value={users.semester} onChange={handleChange}/></th>
+            </tr>
+            <tr>
+                <th>Section</th>
+                <th><input type="text" name="section" value={users.section} onChange={handleChange}/></th>
+            </tr>
+            <tr>
+                <th>Batch</th>
+                <th><input type="text" name="batch" value={users.batch} onChange={handleChange}/></th>
+            </tr>
+            <tr>
+                <th>Subject Code</th>
+                <th><textarea cols="80" name="subcode" value={users.subcode} onChange={handleChange}></textarea> </th>
             </tr>
             <tr>
                 <td><button onClick={saveData}>Save Data</button></td>

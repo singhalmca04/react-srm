@@ -10,6 +10,7 @@ const Apicall = () => {
     const navigate = useNavigate();
     const [response, setResponse] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [imageUpload, setImageUpload] = useState(false);
     const [excelData, setExcelData] = useState([]);
     const [files, setFiles] = useState([]);
 
@@ -20,7 +21,7 @@ const Apicall = () => {
                 const res = await fetch(apiUrl + "/finduser");
                 const data = await res.json();
                 setResponse(data.data);
-
+                console.log(response[0].subcode)
             } catch (error) {
                 console.error("Error:", error);
             } finally {
@@ -116,9 +117,35 @@ const Apicall = () => {
     };
 
     const handleBulkUpload = async () => {
-        const formData = new FormData();
-        files.forEach(file => formData.append('images', file));
-        await axios.post(apiUrl + `/upload/bulk/images`, formData);
+        for (const file of files) {
+            setImageUpload(true);
+            const fileName = file.name.substring(0, file.name.lastIndexOf('.'));
+            console.log(file.name.substring(0, file.name.lastIndexOf('.')))
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', 'hallticket'); // Replace with your preset
+            formData.append('cloud_name', 'dnf95bknw');        // Optional
+
+            const res = await fetch(
+                'https://api.cloudinary.com/v1_1/dnf95bknw/image/upload',
+                {
+                    method: 'POST',
+                    body: formData,
+                }
+            );
+            const data = await res.json(); // Parse the response
+            console.log(data.secure_url, 'Cloudinary response');
+
+            // 2. Save to backend
+            await axios.post(apiUrl + '/upload/image/path', {
+                fileName,
+                imageUrl: data.secure_url,
+            });
+        }
+        setImageUpload(false);
+        // const formData = new FormData();
+        // files.forEach(file => formData.append('images', file));
+        // await axios.post(apiUrl + `/upload/bulk/images`, formData);
         navigate(0);
     };
 
@@ -148,10 +175,10 @@ const Apicall = () => {
                     <div className="col-md-8">
                         <h2>User Table List</h2>
                     </div>
-                    {/* <div className="col-md-2">
+                     <div className="col-md-2">
                         <button onClick={downloadData}>Download in PDF</button>
                     </div>
-                    <div className="col-md-2">
+                    {/*<div className="col-md-2">
                         <button onClick={downloadDatax}>Download in Excel</button>
                     </div> */}
                     <div className="col-md-2">
@@ -172,11 +199,17 @@ const Apicall = () => {
                         <input type="file" accept=".xlsx, .xls" onChange={uploadExcelIe} />
                     </div>
                 </div> */}
-                <div className="row" style={{marginTop: '50px'}}>
+                <div className="row" style={{ marginTop: '50px' }}>
                     <div className="col-md-12">
                         <b>Upload Bulk Images</b>
                         <input type="file" multiple accept="image/*" onChange={handleChange} />
+                        {imageUpload && (
+                            <>
+                                <img src="/loading.webp" alt="Uploading..." width={50} />
+                            </>
+                        )}
                         <button onClick={handleBulkUpload}>Upload</button>
+
                     </div>
                 </div>
             </div>
@@ -189,6 +222,13 @@ const Apicall = () => {
                         <th>Name</th>
                         <th>Semester</th>
                         <th>Section</th>
+                        {
+                            response && response[0]
+                                ? response[0].subcode.map((code, index) => (
+                                    <th key={index}>Subject Code {index + 1}</th>
+                                ))
+                                : <th>Subject Code1</th>
+                        }
                         <th>Batch</th>
                         <th>Image</th>
                         <th>Action</th>
@@ -202,9 +242,12 @@ const Apicall = () => {
                             <td>{user.name}</td>
                             <td>{user.semester}</td>
                             <td>{user.section}</td>
+                            {user.subcode.map((code) => (
+                                <td>{code}</td>
+                            ))}
                             <td>{user.batch}</td>
-                            <td><img src={user?.image ? `${apiUrl}${user.image}` : '/logo192.png'} width="50px" alt="No Image" /></td>
-                            <td> <Button variant="danger" onClick={() => navigate('/update', { state: { id: user._id, name: user.name, marks: user.marks, regno: user.regno } })}>Edit</Button>
+                            <td><img src={user?.image ? `${user.image}` : '/logo192.png'} width="50px" alt="No Image" /></td>
+                            <td> <Button variant="danger" onClick={() => navigate('/update', { state: { id: user._id, name: user.name, semester: user.semester, regno: user.regno, section: user.section, batch: user.batch, subcode: user.subcode } })}>Edit</Button>
                                 &nbsp;&nbsp;&nbsp; <Button onClick={() => navigate('/delete', { state: { id: user._id } })} variant="outline-success">Delete</Button>
                                 &nbsp;&nbsp;&nbsp; <input type="file" accept="image/*" onChange={handleFileChange} />
                                 <button disabled={!file} onClick={() => uploadPics(user._id)}>Upload</button> </td>
