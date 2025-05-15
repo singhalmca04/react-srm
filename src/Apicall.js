@@ -178,7 +178,7 @@ const Apicall = () => {
                      <div className="col-md-2">
                         <button onClick={downloadData}>Download in PDF</button>
                     </div>
-                    {/*<div className="col-md-2">
+                    {/* <div className="col-md-2">
                         <button onClick={downloadDatax}>Download in Excel</button>
                     </div> */}
                     <div className="col-md-2">
