@@ -30,10 +30,10 @@ const Apicall = () => {
         }
         getData();
     }, []);
-    async function downloadData() {
+    async function downloadData(group) {
         setLoading(true);
         try {
-            const res = await fetch(apiUrl + "/downloaduser");
+            const res = await fetch(apiUrl + "/downloaduser/"+group);
             const blob = await res.blob();
 
             // Create a link and simulate click to download
@@ -172,11 +172,14 @@ const Apicall = () => {
         <div>
             <div className="container mt-4">
                 <div className="row">
-                    <div className="col-md-8">
+                    <div className="col-md-6">
                         <h2>User Table List</h2>
                     </div>
                      <div className="col-md-2">
-                        <button onClick={downloadData}>Download in PDF</button>
+                        <button onClick={() => downloadData(1)}>Download PDF (G1) </button>
+                    </div>
+                    <div className="col-md-2">
+                        <button onClick={() => downloadData(2)}>Download PDF (G2) </button>
                     </div>
                     {/* <div className="col-md-2">
                         <button onClick={downloadDatax}>Download in Excel</button>
