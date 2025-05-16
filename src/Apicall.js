@@ -91,7 +91,7 @@ const Apicall = () => {
         await res.json();
         navigate(0);
     }
-    if (loading) return <p>Loading...</p>;
+    if (loading) return <p>Loading... It takes approx 30 sec to complete</p>;
 
     const uploadExcel = async (e) => {
         const file = e.target.files[0];
