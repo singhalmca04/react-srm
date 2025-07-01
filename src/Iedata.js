@@ -69,6 +69,7 @@ const Iedata = () => {
                     <div className="col-md-12">
                         <b>Upload IE Data</b>
                         <input type="file" accept=".xlsx, .xls" onChange={uploadExcelIe} />
+                        <a href="/ie-details.xlsx" target="_blank">Download IE Data Template File</a>
                     </div>
                 </div>
             </div>
@@ -81,7 +82,7 @@ const Iedata = () => {
                         <th>Month</th>
                         <th>Year</th>
                         <th>Program</th>
-                        <th>Section</th>
+                        <th>Specialization</th>
                         <th>Semester</th>
                         <th>Subject Code</th>
                         <th>Subject Name</th>
@@ -99,7 +100,7 @@ const Iedata = () => {
                             <td>{user.month}</td>
                             <td>{user.year}</td>
                             <td>{user.program}</td>
-                            <td>{user.section}</td>
+                            <td>{user.specialization}</td>
                             <td>{user.semester}</td>
                             <td>{user.subcode}</td>
                             <td>{user.subject}</td>
@@ -107,7 +108,7 @@ const Iedata = () => {
                             <td>{user.session}</td>
                             <td>{user.batch}</td>
                             <td> <Button variant="danger" onClick={() => navigate('/updateie', { state: { id: user._id, 
-                                ie: user.ie, month: user.month, year: user.year, program: user.program, section: user.section, 
+                                ie: user.ie, month: user.month, year: user.year, program: user.program, specialization: user.specialization, 
                                 semester: user.semester, subcode: user.subcode, subject: user.subject, examdate: user.examdate,
                                 session: user.session, batch: user.batch } })}>Edit</Button>
                                 &nbsp;&nbsp;&nbsp; <Button onClick={() => navigate('/deleteie', { state: { id: user._id } })} variant="outline-success">Delete</Button>

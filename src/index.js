@@ -7,6 +7,7 @@ import Secdapi from './Secdapi';
 import Life from './Hook';
 import Mail from './Mail';
 import Iedata from './Iedata';
+import Studentdata from './Studentdata';
 import Ieupdate from './Ieupdate';
 import Iedelete from './Iedelete';
 import { Routes, Route, BrowserRouter as Router } from 'react-router-dom';
@@ -22,6 +23,7 @@ root.render(
         <Nav className="me-auto">
           <Nav.Link href="/">Home</Nav.Link>
           {/* <Nav.Link href="/create">Create Data</Nav.Link> */}
+          <Nav.Link href="/Studentdata">Upload Student Data</Nav.Link>
           <Nav.Link href="/iedata">Upload IE Data</Nav.Link>
           {/* <NavDropdown title="Dropdown" id="basic-nav-dropdown">
             <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
@@ -47,6 +49,7 @@ root.render(
         <Route path="/delete" element={<Life />} />
         <Route path="/mail" element={<Mail />} />
         <Route path="/iedata" element={<Iedata />} />
+        <Route path="/studentdata" element={<Studentdata />} />
         <Route path="/updateie" element={<Ieupdate />} />
         <Route path="/deleteie" element={<Iedelete />} />
       </Routes>
