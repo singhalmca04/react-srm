@@ -11,7 +11,7 @@ const Apicall = () => {
     const navigate = useNavigate();
     const [response, setResponse] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [data, setData] = useState({ branch: '', specialization: '', semester: '', section: '' });
+    const [data, setData] = useState({ branch: localStorage.getItem('branch') || '', specialization: localStorage.getItem('specialization') || '', semester: localStorage.getItem('semester') || '', section: localStorage.getItem('section') || '' });
     const [isData, setIsData] = useState(false);
     const [specializations, setSpecializations] = useState([]);
     const [semesters, setSemesters] = useState([]);
@@ -21,6 +21,7 @@ const Apicall = () => {
         const { name, value } = e.target;
         const updated = { ...data, [name]: value };
         setData(updated);
+        localStorage.setItem(name, value);
         console.log(updated);
         setLoading(true);
         try {
@@ -135,14 +136,6 @@ const Apicall = () => {
             fileName,
             imageUrl: data.secure_url,
         });
-
-        // const res = await fetch(apiUrl + '/uploadpics/' + id, {
-        //     method: 'POST',
-        //     body: formData,
-        // });
-
-        // await res.json();
-        navigate(0);
     }
     if (loading) return <p>Loading... It takes approx 30 - 60 sec to complete</p>;
 
