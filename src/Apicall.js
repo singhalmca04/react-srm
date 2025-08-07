@@ -16,7 +16,7 @@ const Apicall = () => {
     const [specializations, setSpecializations] = useState([]);
     const [semesters, setSemesters] = useState([]);
     const [sections, setSections] = useState([]);
-
+    console.log(data, 'dddddd');
     const getData = async (e) => {
         const { name, value } = e.target;
         const updated = { ...data, [name]: value };
