@@ -39,7 +39,7 @@ const Apicall = () => {
                         setSemesters(response.data.semester);
                         setSections(response.data.section);
                         setResponse(response.data.user)
-                        if(response.data.user.length)
+                        if (response.data.user.length)
                             setIsData(true);
                     } else {
                         console.error('API call failed');
@@ -57,10 +57,16 @@ const Apicall = () => {
         setLoading(true);
         try {
             console.log(data.branch, data.specialization, data.semester, data.section)
-            const res = await fetch(apiUrl + "/downloaduser/" + data.branch + "/" + data.specialization + "/" + data.semester + "/" + data.section + "/" + group);
+            // const res = await fetch(apiUrl + "/downloaduser/" + data.branch + "/" + data.specialization + "/" + data.semester + "/" + data.section + "/" + group);
+            const res = await fetch(apiUrl + "/downloaduser/" + data.branch + "/" + data.specialization + "/" + data.semester + "/" + data.section + "/" + group, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/pdf',
+                },
+            });
             const result = await res.json()
             console.log(result, 'res')
-            if(result.code === 2) {
+            if (result.code === 2) {
                 alert("IE Details Not Found");
             } else {
                 const blob = await res.blob();
