@@ -122,7 +122,8 @@ const Apicall = () => {
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'generated.pdf';
+            var name = data.branch + "-" + data.specialization + "-" + data.semester + "-" + data.section + "-" + group
+            a.download = name +'.pdf';
             document.body.appendChild(a);
             a.click();
             a.remove();
