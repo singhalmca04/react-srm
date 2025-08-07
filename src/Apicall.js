@@ -113,15 +113,35 @@ const Apicall = () => {
     };
 
     async function uploadPics(id) {
+        const fileName = file.name.substring(0, file.name.lastIndexOf('.'));
+        console.log(file.name.substring(0, file.name.lastIndexOf('.')))
         const formData = new FormData();
-        formData.append('image', file);
+        formData.append('file', file);
+        formData.append('upload_preset', 'hallticket'); // Replace with your preset
+        formData.append('cloud_name', 'dnf95bknw');        // Optional
 
-        const res = await fetch(apiUrl + '/uploadpics/' + id, {
-            method: 'POST',
-            body: formData,
+        const res = await fetch(
+            'https://api.cloudinary.com/v1_1/dnf95bknw/image/upload',
+            {
+                method: 'POST',
+                body: formData,
+            }
+        );
+        const data = await res.json(); // Parse the response
+        console.log(data.secure_url, 'Cloudinary response');
+
+        // 2. Save to backend
+        await axios.post(apiUrl + '/uploadpics/' + id, {
+            fileName,
+            imageUrl: data.secure_url,
         });
 
-        await res.json();
+        // const res = await fetch(apiUrl + '/uploadpics/' + id, {
+        //     method: 'POST',
+        //     body: formData,
+        // });
+
+        // await res.json();
         navigate(0);
     }
     if (loading) return <p>Loading... It takes approx 30 - 60 sec to complete</p>;
