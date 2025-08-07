@@ -28,7 +28,7 @@ const Studentdata = () => {
                 setLoading(false);
             }
         }
-        getData();
+        // getData();
     }, []);
 
 
@@ -142,7 +142,7 @@ const Studentdata = () => {
                         <th>Semester</th>
                         <th>Section</th>
                         {
-                            response && response[0]
+                            response && response[0] && response[0].subcode
                                 ? response[0].subcode.map((code, index) => (
                                     <th key={index}>Subject Code {index + 1}</th>
                                 ))
