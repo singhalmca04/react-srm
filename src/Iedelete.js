@@ -1,38 +1,27 @@
-import React from 'react';
+import React, { useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom';
+const apiUrl = process.env.REACT_APP_API_URL;
 
-class Life extends React.Component {
-    constructor(){
-        super();
-        console.log("constructor called");
-        this.state = {
-            name: "ABC",
-            age: 25
-        }
-    }
-    componentDidMount() {
-        console.log("Mount called");
-    }
-    componentDidUpdate() {
-        console.log("Update called");
-    }
-    componentWillUnmount() {
-        console.log("Unmount called");
-    }
-    changeAge = () => {
-        this.setState({age: this.state.age + 1});
-        
-    }
-    render() {
-        return(
-            <div>
-                <h1>Hello</h1>
-                <h6> Name is {this.state.name}</h6>
-                <h6> Age is {this.state.age}</h6>
-                <a href="/create">Create Data</a>
-                <button onClick={this.changeAge}>Change Age</button>
-            </div>
-        )
-    }
+const Hook = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { id } = location.state || {};
+
+  useEffect(() => {
+    fetch(apiUrl + "/deleteie/"+id, {
+      method: "DELETE"
+    })
+    .then((res)=> res.json())
+    .then((data)=>{
+      console.log(data);
+      setTimeout(navigate('/iedata'), 1000);
+    })
+  }, [])
+  return (
+    <div>
+      <h1>Deleted.... </h1>
+    </div>
+  )
 }
 
-export default Life;
+export default Hook;

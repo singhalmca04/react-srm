@@ -4,7 +4,7 @@ import './index.css';
 import Secdapipost from './Secdapipost';
 import Apicall from './Apicall';
 import Secdapi from './Secdapi';
-import Life from './Hook';
+import Hook from './Hook';
 import Mail from './Mail';
 import Iedata from './Iedata';
 import Studentdata from './Studentdata';
@@ -46,7 +46,7 @@ root.render(
         <Route path="/" element={<Apicall />} />
         <Route path="/create" element={<Secdapipost />} />
         <Route path="/update" element={<Secdapi />} />
-        <Route path="/delete" element={<Life />} />
+        <Route path="/delete" element={<Hook />} />
         <Route path="/mail" element={<Mail />} />
         <Route path="/iedata" element={<Iedata />} />
         <Route path="/studentdata" element={<Studentdata />} />
