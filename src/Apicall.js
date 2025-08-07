@@ -56,33 +56,30 @@ const Apicall = () => {
     async function downloadData(group) {
         setLoading(true);
         try {
-            console.log(data.branch, data.specialization, data.semester, data.section)
-            // const res = await fetch(apiUrl + "/downloaduser/" + data.branch + "/" + data.specialization + "/" + data.semester + "/" + data.section + "/" + group);
             const res = await fetch(apiUrl + "/downloaduser/" + data.branch + "/" + data.specialization + "/" + data.semester + "/" + data.section + "/" + group, {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/pdf',
                 },
             });
-            const result = await res.json()
-            console.log(result, 'res')
-            if (result.code === 2) {
+            if (res.status === 204 || res.status === 404) {
                 alert("IE Details Not Found");
-            } else {
-                const blob = await res.blob();
-
-                // Create a link and simulate click to download
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'generated.pdf';
-                document.body.appendChild(a);
-                a.click();
-                a.remove();
-                window.URL.revokeObjectURL(url);
+                return;
             }
+            const blob = await res.blob();
+
+            // Create a link and simulate click to download
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'generated.pdf';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+
         } catch (error) {
-            console.error("Error:", error);
+            console.error("Error:" + error);
         } finally {
             setLoading(false);
         }
