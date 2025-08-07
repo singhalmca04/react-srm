@@ -65,6 +65,13 @@ const Apicall = () => {
             setLoading(false);
         }
     };
+    const setSection = async (e) => {
+        const { name, value } = e.target;
+        const updated = { ...data, [name]: value };
+        setData(updated);
+        localStorage.setItem(name, value);
+        console.log(updated);
+    };
     const getFinalData = async (e) => {
         setLoading(true);
         try {
@@ -226,7 +233,7 @@ const Apicall = () => {
                     </div>
                     <div className="col-md-5">
                         <label>Section &nbsp;&nbsp;
-                            <Form.Select name="section" value={data.section}>
+                            <Form.Select name="section" value={data.section} onChange={setSection}>
                                 <option value="">Select</option>
                                 {sections.map((spec, index) => (
                                     <option key={index} value={spec}>
