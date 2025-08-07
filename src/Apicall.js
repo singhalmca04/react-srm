@@ -19,7 +19,16 @@ const Apicall = () => {
     console.log(data, 'dddddd');
     useEffect(()=>{
         setSpecializations([data.specialization]);
+        setSemesters([data.semester]);
+        setSections([data.section]);
     }, [])
+    const clearData = () =>{
+        localStorage.removeItem('branch');
+        localStorage.removeItem('specialization');
+        localStorage.removeItem('semester');
+        localStorage.removeItem('section');
+        setData({ branch: '', specialization: '', semester: '', section: '' });
+    }
     const getData = async (e) => {
         const { name, value } = e.target;
         const updated = { ...data, [name]: value };
@@ -28,7 +37,6 @@ const Apicall = () => {
         console.log(updated);
         setLoading(true);
         try {
-            console.log(updated.branch, 'bbbb');
             const xhr = new XMLHttpRequest();
             const url = apiUrl + '/finduser';
 
@@ -51,6 +59,37 @@ const Apicall = () => {
                 }
             };
             xhr.send(JSON.stringify(updated));
+        } catch (error) {
+            console.error("Error:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+    const getFinalData = async (e) => {
+        setLoading(true);
+        try {
+            const xhr = new XMLHttpRequest();
+            const url = apiUrl + '/finduser';
+
+            xhr.open('POST', url, true);
+            xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    setLoading(false);
+                    if (xhr.status === 200) {
+                        const response = JSON.parse(xhr.responseText);
+                        setSpecializations(response.data.specialization);
+                        setSemesters(response.data.semester);
+                        setSections(response.data.section);
+                        setResponse(response.data.user)
+                        if (response.data.user.length)
+                            setIsData(true);
+                    } else {
+                        console.error('API call failed');
+                    }
+                }
+            };
+            xhr.send(JSON.stringify(data));
         } catch (error) {
             console.error("Error:", error);
         } finally {
@@ -187,7 +226,7 @@ const Apicall = () => {
                     </div>
                     <div className="col-md-5">
                         <label>Section &nbsp;&nbsp;
-                            <Form.Select name="section" value={data.section} onChange={getData}>
+                            <Form.Select name="section" value={data.section}>
                                 <option value="">Select</option>
                                 {sections.map((spec, index) => (
                                     <option key={index} value={spec}>
@@ -197,9 +236,12 @@ const Apicall = () => {
                             </Form.Select>
                         </label>
                     </div>
-                    {/* <div className="col-md-3">
-                        <Button onClick={getData}>Get Data </Button>
-                    </div> */}
+                    <div className="col-md-3">
+                        <Button onClick={getFinalData}>Get Data </Button>
+                    </div>
+                    <div className="col-md-3">
+                        <Button onClick={clearData}>Clear </Button>
+                    </div>
                 </div>
             </div>
             {/* {isData && (
