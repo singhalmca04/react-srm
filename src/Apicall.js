@@ -16,13 +16,14 @@ const Apicall = () => {
     const [specializations, setSpecializations] = useState([]);
     const [semesters, setSemesters] = useState([]);
     const [sections, setSections] = useState([]);
+    const [imageUpload, setImageUpload] = useState(false);
     console.log(data, 'dddddd');
-    useEffect(()=>{
+    useEffect(() => {
         setSpecializations([data.specialization]);
         setSemesters([data.semester]);
         setSections([data.section]);
     }, [])
-    const clearData = () =>{
+    const clearData = () => {
         localStorage.removeItem('branch');
         localStorage.removeItem('specialization');
         localStorage.removeItem('semester');
@@ -74,6 +75,7 @@ const Apicall = () => {
     };
     const getFinalData = async (e) => {
         setLoading(true);
+        setImageUpload(true);
         try {
             const xhr = new XMLHttpRequest();
             const url = apiUrl + '/finduser';
@@ -83,6 +85,7 @@ const Apicall = () => {
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
                     setLoading(false);
+                    setImageUpload(false);
                     if (xhr.status === 200) {
                         const response = JSON.parse(xhr.responseText);
                         setSpecializations(response.data.specialization);
@@ -101,6 +104,7 @@ const Apicall = () => {
             console.error("Error:", error);
         } finally {
             setLoading(false);
+            setImageUpload(false);
         }
     };
     async function downloadData(group) {
@@ -123,7 +127,7 @@ const Apicall = () => {
             const a = document.createElement('a');
             a.href = url;
             var name = data.branch + "-" + data.specialization + "-" + data.semester + "-" + data.section + "-" + group
-            a.download = name +'.pdf';
+            a.download = name + '.pdf';
             document.body.appendChild(a);
             a.click();
             a.remove();
@@ -164,6 +168,7 @@ const Apicall = () => {
     };
 
     async function uploadPics(id) {
+        setImageUpload(true);
         const fileName = file.name.substring(0, file.name.lastIndexOf('.'));
         console.log(file.name.substring(0, file.name.lastIndexOf('.')))
         const formData = new FormData();
@@ -186,6 +191,7 @@ const Apicall = () => {
             fileName,
             imageUrl: data.secure_url,
         });
+        setImageUpload(false);
     }
     if (loading) return <p>Loading... It takes approx 30 - 60 sec to complete</p>;
 
@@ -208,9 +214,12 @@ const Apicall = () => {
                         <Form.Select name="branch" value={data.branch} onChange={getData}>
                             <option value="">Select</option>
                             <option value="CSE">CSE</option>
+                            <option value="CSE">MCA</option>
+                            <option value="CSE">BCA</option>
+                            <option value="CSE">BSc</option>
                         </Form.Select>
                     </div>
-                    <div className="col-md-3">
+                    <div className="col-md-2">
                         Specialization &nbsp;&nbsp;
                         <Form.Select name="specialization" value={data.specialization} onChange={getData}>
                             <option value="">Select</option>
@@ -232,7 +241,7 @@ const Apicall = () => {
                             ))}
                         </Form.Select>
                     </div>
-                    <div className="col-md-5">
+                    <div className="col-md-2">
                         <label>Section &nbsp;&nbsp;
                             <Form.Select name="section" value={data.section} onChange={setSection}>
                                 <option value="">Select</option>
@@ -244,10 +253,15 @@ const Apicall = () => {
                             </Form.Select>
                         </label>
                     </div>
-                    <div className="col-md-3">
+                    <div className="col-md-2">
+                        {imageUpload && (
+                            <>
+                                <img src="/loading.webp" alt="Uploading..." width={50} />
+                            </>
+                        )}
                         <Button onClick={getFinalData}>Get Data </Button>
                     </div>
-                    <div className="col-md-3">
+                    <div className="col-md-2">
                         <Button onClick={clearData}>Clear </Button>
                     </div>
                 </div>
@@ -290,7 +304,7 @@ const Apicall = () => {
                             <button onClick={downloadDatax}>Download in Excel</button>
                         </div> */}
                         {/* <div className="col-md-2">
-                            <button onClick={() => navigate('/mail')}>Approve</button>
+                            <button onClick={() => navigate('/mail')}>Approve / Send Mail</button>
                         </div> */}
                     </div>
 
@@ -330,7 +344,12 @@ const Apicall = () => {
                                     <td> <Button variant="danger" onClick={() => navigate('/update', { state: { id: user._id, name: user.name, semester: user.semester, regno: user.regno, section: user.section, batch: user.batch, subcode: user.subcode } })}>Edit</Button>
                                         &nbsp;&nbsp;&nbsp; <Button onClick={() => navigate('/delete', { state: { id: user._id } })} variant="outline-success">Delete</Button>
                                         &nbsp;&nbsp;&nbsp; <input type="file" accept="image/*" onChange={handleFileChange} />
-                                        <button disabled={!file} onClick={() => uploadPics(user._id)}>Upload</button> </td>
+                                        <button disabled={!file} onClick={() => uploadPics(user._id)}>Upload</button>
+                                        {imageUpload && (
+                                            <>
+                                                <img src="/loading.webp" alt="Uploading..." width={50} />
+                                            </>
+                                        )}</td>
                                 </tr>
                             )) : <tr key="1"><td>No data found</td></tr>}
                         </tbody>

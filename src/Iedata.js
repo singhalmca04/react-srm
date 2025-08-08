@@ -12,10 +12,11 @@ const Iedata = () => {
     const [loading, setLoading] = useState(false);
     const [excelData, setExcelData] = useState([]);
     const [files, setFiles] = useState([]);
+    const [imageUpload, setImageUpload] = useState(false);
 
     useEffect(() => {
         async function getData() {
-            setLoading(true);
+            setImageUpload(true);
             try {
                 const res = await fetch(apiUrl + "/findstudents");
                 const data = await res.json();
@@ -24,7 +25,7 @@ const Iedata = () => {
             } catch (error) {
                 console.error("Error:", error);
             } finally {
-                setLoading(false);
+                setImageUpload(false);
             }
         }
         getData();
@@ -47,11 +48,13 @@ const Iedata = () => {
         formData.append('file', file);
 
         try {
+            setImageUpload(true);
             const res = await axios.post(apiUrl + '/uploadexcelie', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
 
             setExcelData(res.data.data);
+             setImageUpload(false);
         } catch (err) {
             console.error('Upload error:', err);
         }
@@ -68,7 +71,12 @@ const Iedata = () => {
                 <div className="row">
                     <div className="col-md-12">
                         <b>Upload IE Data</b>
-                        <input type="file" accept=".xlsx, .xls" onChange={uploadExcelIe} />
+                        <input type="file" accept=".xlsx, .xls" onChange={uploadExcelIe} /> &nbsp;&nbsp;&nbsp;
+                        {imageUpload && (
+                            <>
+                                <img src="/loading.webp" alt="Uploading..." width={50} />
+                            </>
+                        )}
                         <a href="/ie-details.xlsx" target="_blank">Download IE Data Template File</a>
                     </div>
                 </div>

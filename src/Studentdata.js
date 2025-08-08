@@ -60,11 +60,13 @@ const Studentdata = () => {
         formData.append('file', file);
 
         try {
+            setImageUpload(true);
             const res = await axios.post(apiUrl + '/uploadexcel', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
 
             setExcelData(res.data.data);
+            setImageUpload(false);
             navigate(0);
         } catch (err) {
             console.error('Upload error:', err);
@@ -115,6 +117,11 @@ const Studentdata = () => {
                     <div className="col-md-12">
                         <b>Upload Student Data</b> &nbsp;&nbsp;&nbsp;
                         <input type="file" accept=".xlsx, .xls" onChange={uploadExcel} />&nbsp;&nbsp;&nbsp;
+                        {imageUpload && (
+                            <>
+                                <img src="/loading.webp" alt="Uploading..." width={50} />
+                            </>
+                        )}
                         <a href="/students-data.xlsx" target="_blank">Download Student Data Template File</a>
                     </div>
                 </div>
