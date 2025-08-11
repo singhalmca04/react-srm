@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
 import Form from 'react-bootstrap/Form';
 import axios from 'axios';
+import LoginModal from "./LoginModal"; // Your modal component
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
@@ -17,11 +18,17 @@ const Apicall = () => {
     const [semesters, setSemesters] = useState([]);
     const [sections, setSections] = useState([]);
     const [imageUpload, setImageUpload] = useState(false);
+    const [showLoginModal, setShowLoginModal] = useState(false);
+
     console.log(data, 'dddddd');
     useEffect(() => {
         setSpecializations([data.specialization]);
         setSemesters([data.semester]);
         setSections([data.section]);
+        const loggedIn = localStorage.getItem("isLoggedIn");
+        if (!loggedIn) {
+            setShowLoginModal(true);
+        }
     }, [])
     const clearData = () => {
         localStorage.removeItem('branch');
@@ -192,6 +199,7 @@ const Apicall = () => {
             imageUrl: data.secure_url,
         });
         setImageUpload(false);
+        navigate(0);
     }
     if (loading) return <p>Loading... It takes approx 30 - 60 sec to complete</p>;
 
@@ -202,6 +210,9 @@ const Apicall = () => {
 
     return (
         <div>
+            {showLoginModal && (
+                <LoginModal onClose={() => setShowLoginModal(false)} />
+            )}
             <div className="container mt-4">
                 <div className="row mb-4">
                     <div className="col-md-12">
@@ -214,9 +225,9 @@ const Apicall = () => {
                         <Form.Select name="branch" value={data.branch} onChange={getData}>
                             <option value="">Select</option>
                             <option value="CSE">CSE</option>
-                            <option value="CSE">MCA</option>
-                            <option value="CSE">BCA</option>
-                            <option value="CSE">BSc</option>
+                            <option value="MCA">MCA</option>
+                            <option value="BCA">BCA</option>
+                            <option value="BSC">BSC</option>
                         </Form.Select>
                     </div>
                     <div className="col-md-2">
@@ -345,11 +356,7 @@ const Apicall = () => {
                                         &nbsp;&nbsp;&nbsp; <Button onClick={() => navigate('/delete', { state: { id: user._id } })} variant="outline-success">Delete</Button>
                                         &nbsp;&nbsp;&nbsp; <input type="file" accept="image/*" onChange={handleFileChange} />
                                         <button disabled={!file} onClick={() => uploadPics(user._id)}>Upload</button>
-                                        {imageUpload && (
-                                            <>
-                                                <img src="/loading.webp" alt="Uploading..." width={50} />
-                                            </>
-                                        )}</td>
+                                    </td>
                                 </tr>
                             )) : <tr key="1"><td>No data found</td></tr>}
                         </tbody>
