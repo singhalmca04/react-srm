@@ -15,6 +15,11 @@ import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Navbar, Nav, Container } from 'react-bootstrap';
 
+function handleLogout() {
+  localStorage.clear();
+  window.location.href = '/'; // redirect to login page
+}
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <>
@@ -22,22 +27,11 @@ root.render(
       <Container>
         <Nav className="me-auto">
           <Nav.Link href="/">Home</Nav.Link>
-          {/* <Nav.Link href="/create">Create Data</Nav.Link> */}
           <Nav.Link href="/Studentdata">Upload Student Data</Nav.Link>
           <Nav.Link href="/iedata">Upload IE Data</Nav.Link>
-          {/* <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-            <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-            <NavDropdown.Item href="#action/3.2">
-              Another action
-            </NavDropdown.Item>
-            <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-            <NavDropdown.Divider />
-            <NavDropdown.Item href="#action/3.4">
-              Separated link
-            </NavDropdown.Item>
-          </NavDropdown> */}
-          {/* <Nav.Link href="/update">Update Data</Nav.Link>
-          <Nav.Link href="/delete">Delete Data</Nav.Link> */}
+        </Nav>
+        <Nav className="ms-auto">
+          <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
         </Nav>
       </Container>
     </Navbar>
