@@ -16,7 +16,7 @@ const Iedata = () => {
 
     useEffect(() => {
         async function getData() {
-            setImageUpload(true);
+            // setImageUpload(true);
             try {
                 const res = await fetch(apiUrl + "/findstudents");
                 const data = await res.json();
@@ -25,7 +25,7 @@ const Iedata = () => {
             } catch (error) {
                 console.error("Error:", error);
             } finally {
-                setImageUpload(false);
+                // setImageUpload(false);
             }
         }
         getData();

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom';
 const apiUrl = process.env.REACT_APP_API_URL;
 
-const Hook = () => {
+const Iedelete = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = location.state || {};
@@ -24,4 +24,4 @@ const Hook = () => {
   )
 }
 
-export default Hook;
+export default Iedelete;
