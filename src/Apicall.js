@@ -28,6 +28,7 @@ const Apicall = () => {
         const loggedIn = localStorage.getItem("isLoggedIn");
         if (!loggedIn) {
             setShowLoginModal(true);
+            clearData();
         }
     }, [])
     const clearData = () => {
