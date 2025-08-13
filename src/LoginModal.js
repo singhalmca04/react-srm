@@ -10,7 +10,7 @@ function LoginModal({ onClose }) {
         setChange(false);
         const newOtp = Math.floor(100000 + Math.random() * 900000);
         setOtp(newOtp.toString());
-        let res = await axios.post(apiUrl +"/send/mail", {
+        let res = await axios.post(apiUrl +"/api/test-mail", {
             to: document.getElementById('inputText').value,
             subject: "SRM Hall Ticket Portal: Your Verification Code",
             text: "OTP is " + newOtp
