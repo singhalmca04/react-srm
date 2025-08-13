@@ -12,6 +12,7 @@ const Studentdata = () => {
     const [loading, setLoading] = useState(false);
     const [excelData, setExcelData] = useState([]);
     const [imageUpload, setImageUpload] = useState(false);
+    const [imageUpload2, setImageUpload2] = useState(false);
     const [files, setFiles] = useState([]);
 
     useEffect(() => {
@@ -78,7 +79,7 @@ const Studentdata = () => {
     };
     const handleBulkUpload = async () => {
         for (const file of files) {
-            setImageUpload(true);
+            setImageUpload2(true);
             const fileName = file.name.substring(0, file.name.lastIndexOf('.'));
             console.log(file.name.substring(0, file.name.lastIndexOf('.')))
             const formData = new FormData();
@@ -102,7 +103,7 @@ const Studentdata = () => {
                 imageUrl: data.secure_url,
             });
         }
-        setImageUpload(false);
+        setImageUpload2(false);
         // const formData = new FormData();
         // files.forEach(file => formData.append('images', file));
         // await axios.post(apiUrl + `/upload/bulk/images`, formData);
@@ -129,7 +130,7 @@ const Studentdata = () => {
                     <div className="col-md-12">
                         <b>Upload Bulk Images</b>&nbsp;&nbsp;&nbsp;
                         <input type="file" multiple accept="image/*" onChange={handleChange} />
-                        {imageUpload && (
+                        {imageUpload2 && (
                             <>
                                 <img src="/loading.webp" alt="Uploading..." width={50} />
                             </>
