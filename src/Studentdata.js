@@ -14,6 +14,7 @@ const Studentdata = () => {
     const [imageUpload, setImageUpload] = useState(false);
     const [imageUpload2, setImageUpload2] = useState(false);
     const [files, setFiles] = useState([]);
+    const [uploadedCount, setUploadedCount] = useState(0);
 
     useEffect(() => {
         async function getData() {
@@ -78,6 +79,8 @@ const Studentdata = () => {
         setFiles([...e.target.files]);
     };
     const handleBulkUpload = async () => {
+        if (files.length === 0) return;
+        setUploadedCount(0);
         for (const file of files) {
             setImageUpload2(true);
             const fileName = file.name.substring(0, file.name.lastIndexOf('.'));
@@ -102,6 +105,7 @@ const Studentdata = () => {
                 fileName,
                 imageUrl: data.secure_url,
             });
+            setUploadedCount((prev) => prev + 1);
         }
         setImageUpload2(false);
         // const formData = new FormData();
@@ -114,7 +118,7 @@ const Studentdata = () => {
     return (
         <div>
             <div className="container-fluid">
-                <div className="row" style={{marginTop: 20}}>
+                <div className="row" style={{ marginTop: 20 }}>
                     <div className="col-md-12">
                         <b>Upload Student Data</b> &nbsp;&nbsp;&nbsp;
                         <input type="file" accept=".xlsx, .xls" onChange={uploadExcel} />&nbsp;&nbsp;&nbsp;
@@ -130,9 +134,15 @@ const Studentdata = () => {
                     <div className="col-md-12">
                         <b>Upload Bulk Images</b>&nbsp;&nbsp;&nbsp;
                         <input type="file" multiple accept="image/*" onChange={handleChange} />
+                        {/* {imageUpload2 && (
+                            <>
+                                <img src="/loading.webp" alt="Uploading..." width={50} />
+                            </>
+                        )} */}
                         {imageUpload2 && (
                             <>
                                 <img src="/loading.webp" alt="Uploading..." width={50} />
+                                <p>Uploading {uploadedCount} / {files.length} images...</p>
                             </>
                         )}
                         <button onClick={handleBulkUpload}>Upload</button>
