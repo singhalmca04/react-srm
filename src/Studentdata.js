@@ -141,8 +141,8 @@ const Studentdata = () => {
                         )} */}
                         {imageUpload2 && (
                             <>
-                                <img src="/loading.webp" alt="Uploading..." width={50} />
-                                <p>Uploading {uploadedCount} / {files.length} images...</p>
+                                {/* <img src="/loading.webp" alt="Uploading..." width={50} /> */}
+                                Uploading {uploadedCount} / {files.length} images...
                             </>
                         )}
                         <button onClick={handleBulkUpload}>Upload</button>
