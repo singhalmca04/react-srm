@@ -12,32 +12,25 @@ const Studentdata = () => {
     const [loading, setLoading] = useState(false);
     const [excelData, setExcelData] = useState([]);
     const [imageUpload, setImageUpload] = useState(false);
-    const [imageUpload2, setImageUpload2] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
     const [files, setFiles] = useState([]);
     const [uploadedCount, setUploadedCount] = useState(0);
-
-    useEffect(() => {
-        async function getData() {
-            setLoading(true);
-            try {
-                const res = await fetch(apiUrl + "/findstudents");
-                const data = await res.json();
-                setResponse(data.data);
-
-            } catch (error) {
-                console.error("Error:", error);
-            } finally {
-                setLoading(false);
-            }
-        }
-        // getData();
-    }, []);
-
+    const [excelFile, setExcelFile] = useState(null);
+    const [excelUploading, setExcelUploading] = useState(false);
+    const [uploadMessage, setUploadMessage] = useState("");
 
     const [file, setFile] = useState(null);
 
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
+    };
+
+    const handleExcelChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setUploadMessage("");
+            setExcelFile(file);
+        }
     };
 
     async function uploadPics(id) {
@@ -54,24 +47,30 @@ const Studentdata = () => {
     }
     if (loading) return <p>Loading... It takes approx 30 sec to complete</p>;
 
-    const uploadExcel = async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
+    const uploadExcel = async () => {
+        if (!excelFile) return;
 
         const formData = new FormData();
-        formData.append('file', file);
+        formData.append('file', excelFile);
 
         try {
+            setExcelUploading(true);
+            setUploadMessage("");
             setImageUpload(true);
             const res = await axios.post(apiUrl + '/uploadexcel', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
 
-            setExcelData(res.data.data);
+            setExcelData(res.data.data || []);
+            setUploadMessage("Excel uploaded successfully!");
+            setExcelFile(null);
             setImageUpload(false);
-            navigate(0);
+            // navigate(0);
         } catch (err) {
             console.error('Upload error:', err);
+            setUploadMessage("Upload failed. Try again.");
+        } finally {
+            setExcelUploading(false);
         }
     };
 
@@ -82,7 +81,7 @@ const Studentdata = () => {
         if (files.length === 0) return;
         setUploadedCount(0);
         for (const file of files) {
-            setImageUpload2(true);
+            setIsUploading(true);
             const fileName = file.name.substring(0, file.name.lastIndexOf('.'));
             console.log(file.name.substring(0, file.name.lastIndexOf('.')))
             const formData = new FormData();
@@ -97,8 +96,7 @@ const Studentdata = () => {
                     body: formData,
                 }
             );
-            const data = await res.json(); // Parse the response
-            console.log(data.secure_url, 'Cloudinary response');
+            const data = await res.json();
 
             // 2. Save to backend
             await axios.post(apiUrl + '/upload/image/path', {
@@ -107,10 +105,7 @@ const Studentdata = () => {
             });
             setUploadedCount((prev) => prev + 1);
         }
-        setImageUpload2(false);
-        // const formData = new FormData();
-        // files.forEach(file => formData.append('images', file));
-        // await axios.post(apiUrl + `/upload/bulk/images`, formData);
+        setIsUploading(false);
         navigate(0);
     };
 
@@ -121,37 +116,38 @@ const Studentdata = () => {
                 <div className="row" style={{ marginTop: 20 }}>
                     <div className="col-md-12">
                         <b>Upload Student Data</b> &nbsp;&nbsp;&nbsp;
-                        <input type="file" accept=".xlsx, .xls" onChange={uploadExcel} />&nbsp;&nbsp;&nbsp;
-                        {imageUpload && (
+                        <input type="file" accept=".xlsx, .xls" onChange={handleExcelChange} />
+                        <button onClick={uploadExcel} disabled={!excelFile || excelUploading}>
+                            {excelUploading ? "Uploading..." : "Upload"}
+                        </button>
+                        {excelUploading && (
                             <>
-                                <img src="/loading.webp" alt="Uploading..." width={50} />
+                                <img src="/loading.webp" alt="Uploading..." width={50} />&nbsp;&nbsp;&nbsp;
                             </>
-                        )}
+                        )}&nbsp;&nbsp;&nbsp;
+                        {uploadMessage && <p style={{ marginTop: 10 }}>{uploadMessage}</p>}&nbsp;&nbsp;&nbsp;
                         <a href="/students-data.xlsx" target="_blank">Download Student Data Template File</a>
                     </div>
                 </div>
                 <div className="row" style={{ marginTop: '50px' }}>
                     <div className="col-md-12">
                         <b>Upload Bulk Images</b>&nbsp;&nbsp;&nbsp;
-                        <input type="file" multiple accept="image/*" onChange={handleChange} />
-                        {/* {imageUpload2 && (
-                            <>
-                                <img src="/loading.webp" alt="Uploading..." width={50} />
-                            </>
-                        )} */}
-                        {imageUpload2 && (
+                        <input type="file" multiple accept="image/*" onChange={handleChange} disabled={isUploading} />
+                        {isUploading && (
                             <>
                                 {/* <img src="/loading.webp" alt="Uploading..." width={50} /> */}
                                 Uploading {uploadedCount} / {files.length} images...
                             </>
                         )}
-                        <button onClick={handleBulkUpload}>Upload</button>
+                        <button onClick={handleBulkUpload} disabled={files.length === 0 || isUploading} >
+                             {isUploading ? "Uploading..." : "Upload"}
+                        </button>
 
                     </div>
                 </div>
             </div>
 
-            <Table striped bordered hover>
+            {/* <Table striped bordered hover>
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -191,7 +187,31 @@ const Studentdata = () => {
                         </tr>
                     )) : <tr key="1"><td>No data found</td></tr>}
                 </tbody>
-            </Table>
+            </Table> */}
+            {excelData.length > 0 && (
+                <div style={{ marginTop: 30 }}>
+                    <h4>Uploaded Excel Data</h4>
+                    <Table striped bordered hover>
+                        <thead>
+                            <tr>
+                                {Object.keys(excelData[0]).map((key, i) => (
+                                    <th key={i}>{key}</th>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {excelData.map((row, idx) => (
+                                <tr key={idx}>
+                                    {Object.values(row).map((val, i) => (
+                                        <td key={i}>{val}</td>
+                                    ))}
+                                </tr>
+                            ))}
+                        </tbody>
+                    </Table>
+                </div>
+            )}
+
         </div>
     );
 };

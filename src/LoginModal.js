@@ -5,19 +5,29 @@ import { useState } from 'react';
 function LoginModal({ onClose }) {
     const [otp, setOtp] = useState("");
     const [change, setChange] = useState(false);
+    const [isSending, setIsSending] = useState(false); // new state
     const handleLogin = async () => {
         const apiUrl = process.env.REACT_APP_API_URL;
+        setIsSending(true);  // disable button
         setChange(false);
         const newOtp = Math.floor(100000 + Math.random() * 900000);
         setOtp(newOtp.toString());
-        let res = await axios.post(apiUrl +"/api/test-mail", {
-            to: document.getElementById('inputText').value,
-            subject: "SRM Hall Ticket Portal: Your Verification Code",
-            text: "OTP is " + newOtp
-        });
-        if (res.status == 200) {
-            setChange(true);
-            document.getElementById('inputText').value = "";
+        try {
+            let res = await axios.post(apiUrl + "/api/test-mail", {
+                to: document.getElementById('inputText').value,
+                subject: "SRM Hall Ticket Portal: Your Verification Code",
+                text: "OTP is " + newOtp
+            });
+
+            if (res.status === 200) {
+                setChange(true);
+                document.getElementById('inputText').value = "";
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Failed to send OTP. Try again.");
+        } finally {
+            setIsSending(false); // re-enable button if needed
         }
     };
 
@@ -38,28 +48,30 @@ function LoginModal({ onClose }) {
             </Modal.Header>
             <Modal.Body>
                 <h2>Welcome to SRM</h2>
-                {!change ?
+                {!change ? (
                     <div>
                         <p>Please login to your account</p>
                         <Form.Label htmlFor="inputText">Enter Official Email</Form.Label>
                         <Form.Control type="text" id="inputText" />
-                    </div> :
+                    </div>
+                ) : (
                     <div>
                         <p>Please login to your account</p>
-                        <Form.Label htmlFor="inputText">Enter OTP</Form.Label>
+                        <Form.Label htmlFor="inputOtp">Enter OTP</Form.Label>
                         <Form.Control type="text" id="inputOtp" />
                     </div>
-                }
+                )}
             </Modal.Body>
             <Modal.Footer>
-                {!change ?
-                    <Button variant="primary" onClick={handleLogin}>
-                        Send OTP
-                    </Button> :
+                {!change ? (
+                    <Button variant="primary" onClick={handleLogin} disabled={isSending}>
+                        {isSending ? "Sending..." : "Send OTP"}
+                    </Button>
+                ) : (
                     <Button variant="primary" onClick={handleLoginAfterOtp}>
                         Login
                     </Button>
-                }
+                )}
             </Modal.Footer>
         </Modal>
     );

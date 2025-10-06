@@ -13,9 +13,15 @@ const Iedata = () => {
     const [excelData, setExcelData] = useState([]);
     const [files, setFiles] = useState([]);
     const [imageUpload, setImageUpload] = useState(false);
+    const [excelFile, setExcelFile] = useState(null);
+    const [excelUploading, setExcelUploading] = useState(false);
+    const [uploadMessage, setUploadMessage] = useState("");
 
     useEffect(() => {
-        async function getData() {
+        getData();
+    }, []);
+    
+    async function getData() {
             // setImageUpload(true);
             try {
                 const res = await fetch(apiUrl + "/findstudents");
@@ -28,35 +34,42 @@ const Iedata = () => {
                 // setImageUpload(false);
             }
         }
-        getData();
-    }, []);
-    
-
     const [file, setFile] = useState(null);
 
-    const handleFileChange = (e) => {
-        setFile(e.target.files[0]);
+    const handleExcelChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setUploadMessage("");
+            setExcelFile(file);
+        }
     };
 
     // if (loading) return <p>Loading...</p>
 
     const uploadExcelIe = async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
+        if (!excelFile) return;
 
         const formData = new FormData();
-        formData.append('file', file);
+        formData.append('file', excelFile);
 
         try {
+            setExcelUploading(true);
+            setUploadMessage("");
             setImageUpload(true);
             const res = await axios.post(apiUrl + '/uploadexcelie', formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
 
-            setExcelData(res.data.data);
-             setImageUpload(false);
+            setExcelData(res.data.data || []);
+            setImageUpload(false);
+            setUploadMessage("Excel uploaded successfully!");
+            setExcelFile(null);
+            getData();
         } catch (err) {
             console.error('Upload error:', err);
+            setUploadMessage("Upload failed. Try again.");
+        } finally {
+            setExcelUploading(false);
         }
     };
 
@@ -70,13 +83,18 @@ const Iedata = () => {
                 </div>
                 <div className="row">
                     <div className="col-md-12">
-                        <b>Upload IE Data</b>
-                        <input type="file" accept=".xlsx, .xls" onChange={uploadExcelIe} /> &nbsp;&nbsp;&nbsp;
-                        {imageUpload && (
+                        <b>Upload IE Data</b> &nbsp;&nbsp;&nbsp;
+                        <input type="file" accept=".xlsx, .xls" onChange={handleExcelChange} /> &nbsp;&nbsp;&nbsp;
+                        <button onClick={uploadExcelIe} disabled={!excelFile || excelUploading}>
+                            {excelUploading ? "Uploading..." : "Upload"}
+                        </button>
+                        {excelUploading && (
                             <>
                                 <img src="/loading.webp" alt="Uploading..." width={50} />
                             </>
                         )}
+                        &nbsp;&nbsp;&nbsp;
+                        {uploadMessage && <p style={{ marginTop: 10 }}>{uploadMessage}</p>}&nbsp;&nbsp;&nbsp;
                         <a href="/ie-details.xlsx" target="_blank">Download IE Data Template File</a>
                     </div>
                 </div>
