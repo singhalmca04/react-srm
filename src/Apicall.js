@@ -226,6 +226,8 @@ const Apicall = () => {
                         <Form.Select name="branch" value={data.branch} onChange={getData}>
                             <option value="">Select</option>
                             <option value="CSE">CSE</option>
+                            <option value="BBA">BBA</option>
+                            <option value="MBA">MBA</option>
                             <option value="MCA">MCA</option>
                             <option value="BCA">BCA</option>
                             <option value="BSC">BSC</option>
