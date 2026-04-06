@@ -78,7 +78,7 @@ const Ieupdate = () => {
             </tr>
             <tr>
                 <th>Session</th>
-                <th><input type="text" className="big-input" name="year" value={iedata.session} onChange={handleChange}/></th>
+                <th><input type="text" className="big-input" name="session" value={iedata.session} onChange={handleChange}/></th>
             </tr>
             <tr>
                 <th>Batch</th>
