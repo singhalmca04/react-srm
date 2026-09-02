@@ -12,19 +12,20 @@ const Apicall = () => {
     const navigate = useNavigate();
     const [response, setResponse] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [data, setData] = useState({ branch: localStorage.getItem('branch') || '', specialization: localStorage.getItem('specialization') || '', semester: localStorage.getItem('semester') || '', section: localStorage.getItem('section') || '' });
+    const [data, setData] = useState({ branch: localStorage.getItem('branch') || '', specialization: localStorage.getItem('specialization') || '', semester: localStorage.getItem('semester') || '', section: localStorage.getItem('section') || '', ie: localStorage.getItem('ie') || '' });
     const [isData, setIsData] = useState(false);
     const [specializations, setSpecializations] = useState([]);
     const [semesters, setSemesters] = useState([]);
     const [sections, setSections] = useState([]);
+    const [ies, setIEs] = useState(['I', 'II', 'III']);
     const [imageUpload, setImageUpload] = useState(false);
     const [showLoginModal, setShowLoginModal] = useState(false);
 
-    console.log(data, 'dddddd');
     useEffect(() => {
         setSpecializations([data.specialization]);
         setSemesters([data.semester]);
         setSections([data.section]);
+        setIEs([data.ie]);
         const loggedIn = localStorage.getItem("isLoggedIn");
         if (!loggedIn) {
             setShowLoginModal(true);
@@ -36,7 +37,8 @@ const Apicall = () => {
         localStorage.removeItem('specialization');
         localStorage.removeItem('semester');
         localStorage.removeItem('section');
-        setData({ branch: '', specialization: '', semester: '', section: '' });
+        localStorage.removeItem('ie');
+        setData({ branch: '', specialization: '', semester: '', section: '', ie: '' });
     }
     const getData = async (e) => {
         const { name, value } = e.target;
@@ -59,6 +61,7 @@ const Apicall = () => {
                         setSpecializations(response.data.specialization);
                         setSemesters(response.data.semester);
                         setSections(response.data.section);
+                        setIEs(response.data.ie);
                         setResponse(response.data.user)
                         if (response.data.user.length)
                             setIsData(true);
@@ -74,7 +77,7 @@ const Apicall = () => {
             setLoading(false);
         }
     };
-    const setSection = async (e) => {
+    const handleSelectChange = async (e) => {
         const { name, value } = e.target;
         const updated = { ...data, [name]: value };
         setData(updated);
@@ -99,6 +102,7 @@ const Apicall = () => {
                         setSpecializations(response.data.specialization);
                         setSemesters(response.data.semester);
                         setSections(response.data.section);
+                        setIEs(response.data.ie);
                         setResponse(response.data.user)
                         if (response.data.user.length)
                             setIsData(true);
@@ -228,7 +232,7 @@ const Apicall = () => {
                             <option value="CSE">CSE</option>
                             <option value="BBA">BBA</option>
                             <option value="MBA">MBA</option>
-                            <option value="MCA">MCA</option>
+                            <option value="MTECH">M.Tech.</option>
                             <option value="BCA">BCA</option>
                             <option value="BSC">BSC</option>
                         </Form.Select>
@@ -257,9 +261,21 @@ const Apicall = () => {
                     </div>
                     <div className="col-md-2">
                         <label>Section &nbsp;&nbsp;
-                            <Form.Select name="section" value={data.section} onChange={setSection}>
+                            <Form.Select name="section" value={data.section} onChange={handleSelectChange}>
                                 <option value="">Select</option>
                                 {sections.map((spec, index) => (
+                                    <option key={index} value={spec}>
+                                        {spec}
+                                    </option>
+                                ))}
+                            </Form.Select>
+                        </label>
+                    </div>
+                    <div className="col-md-2">
+                        <label>IE &nbsp;&nbsp;
+                            <Form.Select name="ie" value={data.ie} onChange={handleSelectChange}>
+                                <option value="">Select</option>
+                                {ies.map((spec, index) => (
                                     <option key={index} value={spec}>
                                         {spec}
                                     </option>
@@ -277,6 +293,9 @@ const Apicall = () => {
                     </div>
                     <div className="col-md-2">
                         <Button onClick={clearData}>Clear </Button>
+                    </div>
+                    <div className="col-md-2">
+                        <Button onClick={downloadDatax}>Download Student Data </Button>
                     </div>
                 </div>
             </div>
