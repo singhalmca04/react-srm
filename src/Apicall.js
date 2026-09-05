@@ -80,7 +80,7 @@ const Apicall = () => {
     const handleSelectChange = async (e) => {
         const { name, value } = e.target;
         const updated = { ...data, [name]: value };
-        setData(updated);
+        setData(updated); 
         localStorage.setItem(name, value);
         console.log(updated);
     };

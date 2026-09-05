@@ -179,7 +179,7 @@ const Studentdata = () => {
                                 <td>{code}</td>
                             ))}
                             <td>{user.batch}</td>
-                            <td><img src={user?.image ? `${user.image}` : '/logo192.png'} width="50px" alt="No Image" /></td>
+                            <td><img src={user?.image ? `${user.image}` : '/srm-logo.png'} width="50px" alt="No Image" /></td>
                             <td> <Button variant="danger" onClick={() => navigate('/update', { state: { id: user._id, name: user.name, semester: user.semester, regno: user.regno, section: user.section, batch: user.batch, subcode: user.subcode } })}>Edit</Button>
                                 &nbsp;&nbsp;&nbsp; <Button onClick={() => navigate('/delete', { state: { id: user._id } })} variant="outline-success">Delete</Button>
                                 &nbsp;&nbsp;&nbsp; <input type="file" accept="image/*" onChange={handleFileChange} />
